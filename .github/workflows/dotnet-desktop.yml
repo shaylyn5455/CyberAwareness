@@ -11,7 +11,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Solution_Name: CyberAwareness.sln  # Matches your solution name
+      # CHANGED: Updated to .slnx to match your screenshot
+      Solution_Name: CyberAwareness.slnx  
 
     steps:
     - name: Checkout
@@ -19,29 +20,25 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET SDK
     - name: Install .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x # Matches the version in your screenshots
+        dotnet-version: 8.0.x
 
-    # Add MSBuild to the PATH
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
 
-    # Restore dependencies (Fixes the "Metadata not found" errors)
     - name: Restore the application
       run: msbuild $env:Solution_Name /t:Restore
 
-    # Build the entire solution
     - name: Build the solution
       run: msbuild $env:Solution_Name /p:Configuration=Debug
 
-    # Upload the Build Output (The EXE and DLLs)
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: CyberAwareness-Build
+        # We use wildcards (**) to find the files regardless of the folder path
         path: |
-          CyberAwareness_GUI/bin/Debug/
-          CyberAwareness/bin/Debug/
+          **/bin/Debug/net8.0-windows/
+          **/bin/Debug/net8.0/
