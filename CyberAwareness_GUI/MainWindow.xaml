@@ -1,79 +1,68 @@
 ﻿<Window x:Class="CyberAwareness_GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Aries // Cyber Assistant" Height="600" Width="450" Background="#050505">
+        Title="Aries-X // Sentinel" Height="650" Width="450" Background="#05080A">
     <Window.Resources>
-        <DropShadowEffect x:Key="NeonGlow" Color="#39FF14" BlurRadius="10" ShadowDepth="0" Opacity="0.8"/>
-
-        <Style x:Key="ExcitingButtonClick" TargetType="Button">
-            <Setter Property="Background" Value="#1A1A1A"/>
-            <Setter Property="Foreground" Value="#39FF14"/>
-            <Setter Property="BorderBrush" Value="#39FF14"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Effect" Value="{StaticResource NeonGlow}"/>
-                                <Setter Property="Background" Value="#00FF41"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <DropShadowEffect x:Key="OrangeGlow" Color="#FF4500" BlurRadius="15" ShadowDepth="0" Opacity="0.8"/>
     </Window.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="0,0,0,15" Effect="{StaticResource NeonGlow}">
-            <TextBlock Text="ARIES v1.0" FontSize="30" FontWeight="Bold" Foreground="#39FF14" FontFamily="Courier New"/>
-            <TextBlock x:Name="StatusText" Text="[SYSTEM: Awaiting ST10295211 Auth]" FontSize="11" Foreground="#00FF41" Opacity="0.9" FontFamily="Courier New"/>
-        </StackPanel>
-
-        <Border x:Name="LoginOverlay" Grid.Row="1" Panel.ZIndex="10" Background="#0A0A0A" BorderBrush="#39FF14" BorderThickness="1" CornerRadius="4">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="ENTER ACCESS KEY" Foreground="#39FF14" FontSize="16" FontWeight="Bold" FontFamily="Courier New" Margin="0,0,0,10" HorizontalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
-                <PasswordBox x:Name="PassInput" Width="240" Height="45" Background="#111111" Foreground="#39FF14" BorderBrush="#39FF14" Padding="10" VerticalContentAlignment="Center" FontSize="18"/>
-                <Button Content="AUTHENTICATE" Margin="0,25,0,0" Width="160" Height="45" Click="AuthButton_Click" Style="{StaticResource ExcitingButtonClick}"/>
+        <Border Grid.Row="0" CornerRadius="12" Margin="0,0,0,15" Background="#101520" BorderBrush="#FF4500" BorderThickness="1" Effect="{StaticResource OrangeGlow}">
+            <StackPanel Margin="12">
+                <TextBlock Text="ARIES-X // CORE" FontSize="26" FontWeight="Black" Foreground="#FF4500" HorizontalAlignment="Center" FontFamily="Consolas"/>
+                <TextBlock Text="OPERATOR: SHAYLYN" FontSize="12" Foreground="#00D4FF" HorizontalAlignment="Center" FontWeight="Bold"/>
             </StackPanel>
         </Border>
 
-        <ListBox x:Name="ChatHistory" Grid.Row="1" Background="#0A0A0A" BorderBrush="#39FF14" BorderThickness="1" Padding="10">
-            <ListBox.Resources>
+        <Border x:Name="LoginOverlay" Grid.Row="1" Panel.ZIndex="10" Background="#0A0A0A" BorderBrush="#FF4500" BorderThickness="1" CornerRadius="8">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="SECURE ACCESS REQUIRED" Foreground="#FF4500" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+                <PasswordBox x:Name="PassInput" Width="200" Height="40" Background="#1A1A1A" Foreground="White" BorderBrush="#FF4500" VerticalContentAlignment="Center"/>
+                <Button Content="LOGIN" Margin="0,20,0,0" Width="100" Height="35" Background="#FF4500" Foreground="White" Click="AuthButton_Click"/>
+            </StackPanel>
+        </Border>
+
+        <ListBox x:Name="ChatHistory" Grid.Row="1" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
-                    <Setter Property="Foreground" Value="#39FF14"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border Background="#151515" BorderBrush="#39FF14" BorderThickness="1" CornerRadius="4" Padding="12" Margin="0,5" Effect="{StaticResource NeonGlow}">
+                                <Border x:Name="Bubble" CornerRadius="15" Padding="12" Margin="8,4" MaxWidth="300" HorizontalAlignment="Left" Background="#1A202C" BorderBrush="#303F5F" BorderThickness="1">
                                     <ContentPresenter />
                                 </Border>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsUser}" Value="True">
+                                        <Setter TargetName="Bubble" Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter TargetName="Bubble" Property="Background" Value="#004D66"/>
+                                        <Setter TargetName="Bubble" Property="BorderBrush" Value="#00D4FF"/>
+                                    </DataTrigger>
+                                </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
-            </ListBox.Resources>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Message}" Foreground="White" TextWrapping="Wrap" FontSize="13" FontFamily="Segoe UI Semibold"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
 
-        <Grid Grid.Row="2" Margin="0,15,0,0">
+        <Grid Grid.Row="2" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="UserInput" Height="45" Background="#111111" Foreground="#39FF14" CaretBrush="#39FF14" BorderBrush="#39FF14" Padding="15,10" VerticalContentAlignment="Center" FontSize="14"/>
-            <Button Grid.Column="1" Content="EXECUTE" Width="100" Margin="10,0,0,0" Style="{StaticResource ExcitingButtonClick}" Click="SendButton_Click"/>
+            <TextBox x:Name="UserInput" Height="48" Background="#0D1117" Foreground="White" BorderBrush="#FF4500" BorderThickness="1" Padding="10,0" VerticalContentAlignment="Center" CaretBrush="#00D4FF" FontSize="14"/>
+            <Button Grid.Column="1" Content="EXECUTE" Width="90" Margin="10,0,0,0" Background="#FF4500" Foreground="White" FontWeight="Bold" Click="SendButton_Click"/>
         </Grid>
     </Grid>
 </Window>

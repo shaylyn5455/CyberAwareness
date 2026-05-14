@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Windows;
-
+/* S!--CODE ATTRIBUTION-->
+<!--TITLE: Cyber awareness assistant - Program.cs-->
+<--AUTHOR: (Adnan Yusra)->
+SDATE: (13/05/2026)->
+<--VERSION: (FIREST EDITION) --3
+≤-AVAILABLE:
+(https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sour
+/* * REFERENCE: Microsoft Learn (2024) - System.Media.SoundPlayer
+ * URL: https://learn.microsoft.com/en-us/dotnet/api/system.media.soundplayer
+ * Purpose: Implements audio playback for Task 2.
+ */
 namespace CyberAwareness_GUI
 {
     public partial class MainWindow : Window
     {
         private Chatbot aries = new Chatbot();
         private int messagesSent = 0;
-        private const int MAX_MESSAGES = 5;
+        private const int MAX_MESSAGES = 10;
 
         public MainWindow()
         {
-            AppConfig.PlayGreeting();
             InitializeComponent();
         }
 
         private void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            // Requirement: Users must be authenticated before sending messages
             if (PassInput.Password.ToLower() == "admin")
             {
                 LoginOverlay.Visibility = Visibility.Collapsed;
-                StatusText.Text = "SYSTEM: Authenticated. Session Active.";
-                ChatHistory.Items.Add("ARIES: Welcome to QuickChat. Type '1' for Menu.");
+                AddChatMessage("ARIES-X: Access Granted. Welcome, Operator Shaylyn.", false);
             }
             else
             {
-                MessageBox.Show("ACCESS DENIED.");
+                MessageBox.Show("Access Denied.");
             }
         }
 
@@ -37,22 +44,31 @@ namespace CyberAwareness_GUI
                 string input = UserInput.Text;
                 if (!string.IsNullOrEmpty(input))
                 {
-                    ChatHistory.Items.Add("USER: " + input);
-
-                    // Requirement: Loop and String Manipulation
+                    AddChatMessage("SHAYLYN: " + input, true);
                     string response = aries.GetResponse(input);
-                    ChatHistory.Items.Add(response);
+                    AddChatMessage(response, false);
 
                     messagesSent++;
-                    StatusText.Text = $"MESSAGES: {messagesSent}/{MAX_MESSAGES}";
                     UserInput.Clear();
-                    ChatHistory.ScrollIntoView(ChatHistory.Items[ChatHistory.Items.Count - 1]);
                 }
             }
             else
             {
-                MessageBox.Show("Message limit reached for this session.");
+                AddChatMessage("SYSTEM: Message limit reached. Terminal session locked.", false);
             }
+        }
+
+        // COPY AND PASTE THIS PART OVER YOUR OLD HELPER
+        private void AddChatMessage(string text, bool fromUser)
+        {
+            // Create the message object
+            var newMessage = new { Message = text, IsUser = fromUser };
+
+            // Add it to the list
+            ChatHistory.Items.Add(newMessage);
+
+            // AUTO-SCROLL: This makes it jump to the bottom like the video
+            ChatHistory.ScrollIntoView(newMessage);
         }
     }
 }
