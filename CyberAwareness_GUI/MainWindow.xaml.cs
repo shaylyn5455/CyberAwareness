@@ -1,74 +1,70 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
-/* S!--CODE ATTRIBUTION-->
-<!--TITLE: Cyber awareness assistant - Program.cs-->
-<--AUTHOR: (Adnan Yusra)->
-SDATE: (13/05/2026)->
-<--VERSION: (FIREST EDITION) --3
-≤-AVAILABLE:
-(https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sour
-/* * REFERENCE: Microsoft Learn (2024) - System.Media.SoundPlayer
- * URL: https://learn.microsoft.com/en-us/dotnet/api/system.media.soundplayer
- * Purpose: Implements audio playback for Task 2.
- */
+using System.Windows.Input;
+using System.Windows.Media;
+
 namespace CyberAwareness_GUI
 {
     public partial class MainWindow : Window
     {
-        private Chatbot aries = new Chatbot();
-        private int messagesSent = 0;
-        private const int MAX_MESSAGES = 10;
+        private Chatbot sentinel = new Chatbot();
+        public ObservableCollection<ChatMessage> Messages { get; set; } = new ObservableCollection<ChatMessage>();
 
         public MainWindow()
         {
             InitializeComponent();
+            ChatDisplay.ItemsSource = Messages;
+
+            // Start the system immediately since there's no login screen
+            AppConfig.PlayGreeting();
+            AddChatMessage("ARIES-X", "Access Granted. Connection Secure. Welcome back, Operator Shaylyn.");
+            AddChatMessage("ARIES-X", "System is active. Type '1' for the Security Directory or say 'Hi'.");
         }
 
-        private void AuthButton_Click(object sender, RoutedEventArgs e)
+        private void Execute_Click(object sender, RoutedEventArgs e)
         {
-            if (PassInput.Password.ToLower() == "admin")
-            {
-                LoginOverlay.Visibility = Visibility.Collapsed;
-                AddChatMessage("ARIES-X: Access Granted. Welcome, Operator Shaylyn.", false);
-            }
-            else
-            {
-                MessageBox.Show("Access Denied.");
-            }
+            ProcessInput();
         }
 
-        private void SendButton_Click(object sender, RoutedEventArgs e)
+        private void UserInput_KeyDown(object sender, KeyEventArgs e)
         {
-            if (messagesSent < MAX_MESSAGES)
-            {
-                string input = UserInput.Text;
-                if (!string.IsNullOrEmpty(input))
-                {
-                    AddChatMessage("SHAYLYN: " + input, true);
-                    string response = aries.GetResponse(input);
-                    AddChatMessage(response, false);
-
-                    messagesSent++;
-                    UserInput.Clear();
-                }
-            }
-            else
-            {
-                AddChatMessage("SYSTEM: Message limit reached. Terminal session locked.", false);
-            }
+            if (e.Key == Key.Enter) ProcessInput();
         }
 
-        // COPY AND PASTE THIS PART OVER YOUR OLD HELPER
-        private void AddChatMessage(string text, bool fromUser)
+        private void ProcessInput()
         {
-            // Create the message object
-            var newMessage = new { Message = text, IsUser = fromUser };
+            string input = UserInput.Text;
+            if (string.IsNullOrWhiteSpace(input)) return;
 
-            // Add it to the list
-            ChatHistory.Items.Add(newMessage);
+            // User message
+            AddChatMessage("SHAYLYN", input.ToUpper());
+            UserInput.Clear();
 
-            // AUTO-SCROLL: This makes it jump to the bottom like the video
-            ChatHistory.ScrollIntoView(newMessage);
+            // Bot response
+            string response = sentinel.GetResponse(input);
+            AddChatMessage("ARIES-X", response);
+
+            // Auto-scroll to bottom
+            ChatScroller.ScrollToBottom();
         }
+
+        private void AddChatMessage(string sender, string message)
+        {
+            bool isBot = sender == "ARIES-X";
+            Messages.Add(new ChatMessage
+            {
+                Message = $"{sender}: {message}",
+                Alignment = isBot ? HorizontalAlignment.Left : HorizontalAlignment.Right,
+                BubbleColor = isBot ? new SolidColorBrush(Color.FromRgb(30, 35, 50)) : new SolidColorBrush(Color.FromRgb(0, 60, 80))
+            });
+        }
+    }
+
+    public class ChatMessage
+    {
+        public string Message { get; set; }
+        public HorizontalAlignment Alignment { get; set; }
+        public SolidColorBrush BubbleColor { get; set; }
     }
 }
