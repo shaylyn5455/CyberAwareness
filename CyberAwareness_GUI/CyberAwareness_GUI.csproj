@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CyberAwareness\CyberAwareness.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="AUDIOPROG.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

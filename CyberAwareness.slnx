@@ -1,4 +1,3 @@
 <Solution>
-  <Project Path="CyberAwareness/CyberAwareness.csproj" />
   <Project Path="CyberAwareness_GUI/CyberAwareness_GUI.csproj" />
 </Solution>

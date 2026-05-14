@@ -1,29 +1,58 @@
 ﻿using System;
 using System.Windows;
-/* S!--CODE ATTRIBUTION-->
-<!--TITLE: Cyber awareness assistant - Program.cs-->
-<--AUTHOR: (Adnan Yusra)->
-SDATE: (13/05/2026)->
-<--VERSION: (FIREST EDITION) --3
-≤-AVAILABLE:
-(https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sour
-/* * REFERENCE: Microsoft Learn (2024) - System.Media.SoundPlayer
- * URL: https://learn.microsoft.com/en-us/dotnet/api/system.media.soundplayer
- * Purpose: Implements audio playback for Task 2.
- */
+
 namespace CyberAwareness_GUI
 {
     public partial class MainWindow : Window
     {
+        private Chatbot aries = new Chatbot();
+        private int messagesSent = 0;
+        private const int MAX_MESSAGES = 5;
+
         public MainWindow()
         {
-            // 1. Play the full audio from the Library first
-            CyberAwareness.AppConfig.PlayGreeting();
-
-            // 2. Then load the visual interface
+            AppConfig.PlayGreeting();
             InitializeComponent();
         }
 
-        // Keep your existing Button_Click or Chatbot logic below this line...
+        private void AuthButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Requirement: Users must be authenticated before sending messages
+            if (PassInput.Password.ToLower() == "admin")
+            {
+                LoginOverlay.Visibility = Visibility.Collapsed;
+                StatusText.Text = "SYSTEM: Authenticated. Session Active.";
+                ChatHistory.Items.Add("ARIES: Welcome to QuickChat. Type '1' for Menu.");
+            }
+            else
+            {
+                MessageBox.Show("ACCESS DENIED.");
+            }
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (messagesSent < MAX_MESSAGES)
+            {
+                string input = UserInput.Text;
+                if (!string.IsNullOrEmpty(input))
+                {
+                    ChatHistory.Items.Add("USER: " + input);
+
+                    // Requirement: Loop and String Manipulation
+                    string response = aries.GetResponse(input);
+                    ChatHistory.Items.Add(response);
+
+                    messagesSent++;
+                    StatusText.Text = $"MESSAGES: {messagesSent}/{MAX_MESSAGES}";
+                    UserInput.Clear();
+                    ChatHistory.ScrollIntoView(ChatHistory.Items[ChatHistory.Items.Count - 1]);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Message limit reached for this session.");
+            }
+        }
     }
 }
