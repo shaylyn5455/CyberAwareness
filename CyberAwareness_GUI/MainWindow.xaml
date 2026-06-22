@@ -4,7 +4,6 @@
         Title="Aries-X // Sentinel" Height="600" Width="1000" Background="#050505">
 
     <Grid>
-        <!-- Top Status Bar & Operations Header -->
         <Border Background="#1a0a00" Height="60" VerticalAlignment="Top" BorderBrush="#ff4500" BorderThickness="0,0,0,2">
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="ARIES-X // CORE" Foreground="#ff4500" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
@@ -16,7 +15,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Conversational Output Feed Window -->
         <ScrollViewer x:Name="ChatScroller" Margin="20,80,20,100" VerticalScrollBarVisibility="Auto" CanContentScroll="False">
             <ItemsControl x:Name="ChatDisplay">
                 <ItemsControl.ItemTemplate>
@@ -31,7 +29,6 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <!-- Input Terminal Panel -->
         <Grid Height="60" VerticalAlignment="Bottom" Margin="20,0,20,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -46,7 +43,6 @@
                     FontWeight="Bold" FontSize="14" FontFamily="Consolas" Margin="10,0,0,0" 
                     Click="Execute_Click">
                 <Button.Resources>
-                    <!-- Simple style override to remove default Windows hover gloss looks -->
                     <Style TargetType="Button">
                         <Setter Property="Template">
                             <Setter.Value>

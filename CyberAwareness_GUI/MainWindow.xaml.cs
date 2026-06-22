@@ -6,14 +6,14 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using MySql.Data.MySqlClient;
-
-/* <!--CODE ATTRIBUTION-->
- * <!--TITLE: Cyber awareness assistant - MainWindow.xaml.cs-->
- * <!--AUTHOR: (Adnan Yusra)-->
- * <!--DATE: (22/06/2026)-->
- * <!--VERSION: (FINAL POE EDITION)-->
- *
- * REFERENCE: Microsoft Learn (2024) - System.Media.SoundPlayer
+/* S!--CODE ATTRIBUTION-->
+<!--TITLE: Cyber awareness assistant - Program.cs-->
+<--AUTHOR: (Adnan Yusra)->
+SDATE: (22/06/2026)->
+<--VERSION: (FIREST EDITION) --3
+≤-AVAILABLE:
+(https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sour
+/* * REFERENCE: Microsoft Learn (2024) - System.Media.SoundPlayer
  * URL: https://learn.microsoft.com/en-us/dotnet/api/system.media.soundplayer
  * Purpose: Implements audio playback for Task 2.
  */
@@ -25,7 +25,6 @@ namespace CyberAwareness_GUI
         public ObservableCollection<ChatMessage> Messages { get; set; } = new ObservableCollection<ChatMessage>();
 
         // --- DATABASE CONFIGURATION (Task 1) ---
-        // Adjust the connection string credentials here to match your local development workbench parameters
         private readonly string dbConnectionString = "Server=localhost;Database=cyberawareness_db;Uid=root;Pwd=password;";
 
         // --- QUIZ STATE ENGINE FIELDS (Task 2) ---
@@ -71,6 +70,18 @@ namespace CyberAwareness_GUI
             // --- ROUTING MODE A: IN-GAME ACTIVE QUIZ PROCESSING ---
             if (isQuizActive)
             {
+                // Video Intercept: Gracefully break quiz states
+                string exitCheck = input.Trim().ToLower();
+                if (exitCheck == "exit" || exitCheck == "quit" || exitCheck == "stop")
+                {
+                    isQuizActive = false;
+                    Chatbot.LogAction("User manually terminated active quiz sequence.");
+                    AddChatMessage("ARIES-X", "⚠️ TERMINATION SEQUENCE ACTIVATED: Quiz evaluation cancelled. Returning to Core Interface...");
+                    AddChatMessage("ARIES-X", "System is active. Type '1' for the Security Directory.");
+                    ChatScroller.ScrollToBottom();
+                    return;
+                }
+
                 HandleQuizAnswer(input.Trim());
                 ChatScroller.ScrollToBottom();
                 return;
@@ -104,18 +115,15 @@ namespace CyberAwareness_GUI
 
             if (response.StartsWith("__ADD_TASK_INTENT__"))
             {
-                // Task 3 NLP intercepted an intention mapping to create/add items to the database engine
                 AddChatMessage("ARIES-X", "NLP PARSER: Intent recognized -> [Database Task Generation]. Initializing remote schema record creation sequence...");
                 ParseAndAddTaskFromNlp(input);
             }
             else if (response == "__START_QUIZ_INTENT__")
             {
-                // Task 3 NLP intercepted an intention mapping to start the mini-game quiz
                 StartQuizSequence();
             }
             else
             {
-                // Regular messaging interaction fallback pass-through
                 AddChatMessage("ARIES-X", response);
             }
 
@@ -168,10 +176,9 @@ namespace CyberAwareness_GUI
 
         private void ParseAndAddTaskFromNlp(string rawInput)
         {
-            // Simple NLP context isolation extractor strategy via regex variations
             string title = "Verify Endpoint Access Parameters";
             string description = "Review overall configuration for system entry vectors.";
-            int reminderDays = 7; // Default timeframe parameters if unextracted by NLP string manipulation
+            int reminderDays = 7;
 
             if (Regex.IsMatch(rawInput.ToLower(), @"\b(2fa|two factor|two-factor)\b"))
             {
@@ -288,7 +295,6 @@ namespace CyberAwareness_GUI
         private void InitializeQuizQuestions()
         {
             quizQuestions.Clear();
-            // Requirement: More than 10 Questions mixed with Multiple Choice and True/False variants
             quizQuestions.Add(new QuizQuestion("What should you do if you receive an unexpected email containing urgent verification hyperlinks?\nA) Reply immediately with parameters\nB) Delete the transmission package\nC) Report the email as phishing\nD) Follow instructions to remove holds", "C", "Phishing simulations highlight reporting suspect items immediately to minimize spread windows."));
             quizQuestions.Add(new QuizQuestion("Is utilizing identical access codes across separate nodes safe if they feature high complexity? (True/False)", "FALSE", "Credential recycling enables threat actors to execute full systemic cascading account access takeovers."));
             quizQuestions.Add(new QuizQuestion("What layer of security verification adds a physical validation prompt token to generic entry operations?\nA) Symmetric Encryption\nB) Multi-Factor Authentication (MFA)\nC) Biometric Scanning\nD) Reverse Proxy Handshaking", "B", "MFA enforces confirmation across isolated networks to verify user validity."));
@@ -307,7 +313,7 @@ namespace CyberAwareness_GUI
             isQuizActive = true;
             currentQuestionIndex = 0;
             userScore = 0;
-            AddChatMessage("ARIES-X", "==================================================\nINITIALIZING CYBERSECURITY SKILLS EXAMINATION PANEL\n==================================================\nRespond to each inquiry directly by selecting the corresponding string indicator choice (e.g., A, B, C, D, or True/False).");
+            AddChatMessage("ARIES-X", "==================================================\nINITIALIZING CYBERSECURITY SKILLS EXAMINATION PANEL\n==================================================\nRespond to each inquiry directly by selecting the corresponding string indicator choice (e.g., A, B, C, D, or True/False).\nType 'EXIT' at any point to stop.");
             PresentQuizQuestion();
         }
 
@@ -343,7 +349,6 @@ namespace CyberAwareness_GUI
             }
             else
             {
-                // Terminate examination and calculate metrics
                 isQuizActive = false;
                 string performanceSummary = $"EXAMINATION COMPLETED. Score Registered: {userScore}/{quizQuestions.Count}.\n";
 
@@ -357,7 +362,6 @@ namespace CyberAwareness_GUI
         }
     }
 
-    // --- SUPPORTING POCO STRUCTS ---
     public class ChatMessage
     {
         public string Message { get; set; }
